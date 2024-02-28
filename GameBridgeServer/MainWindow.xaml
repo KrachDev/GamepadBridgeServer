@@ -1,0 +1,58 @@
+﻿<hc:Window x:Class="GameBridgeServer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:local="clr-namespace:GameBridgeServer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Background="#FF272727">
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF1D1818" Offset="0.004"/>
+                <GradientStop Color="#FF272626" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+        <StackPanel x:Name="mainStack" Height="168" VerticalAlignment="Top" Orientation="Horizontal" Background="#FF1F1F1F">
+            <StackPanel Height="151" Width="164">
+                <Button x:Name="StartServerBTN" Content="Start Server" Width="164" Click="StartServerBTN_Click"/>
+                <Button x:Name="StopServerBTN" Content="Stop Server" Width="164" Click="StopServerBTN_Click"/>
+                <Button x:Name="TestBTN" Content="TEST" Width="164" Click="TestBTN_Click"/>
+                <Button x:Name="ClickAbtn" Content="Click A" Width="164" Click="ClickAbtn_Click" MouseDown="ClickAbtn_MouseDown" MouseLeave="ClickAbtn_MouseLeave" />
+
+                <Label x:Name="StatusTXT" Background="#FF524F4F" Foreground="WhiteSmoke" FontStyle="Italic" FontWeight="Bold">Status</Label>
+            </StackPanel>
+            <StackPanel Height="150" Width="329">
+                <StackPanel Orientation="Horizontal">
+                    <Label HorizontalAlignment="Left">IP-ADREASE:</Label>
+                    <Button x:Name="IPACopyBTN" Content="Copy!" HorizontalAlignment="Right" Click="IPACopyBTN_Click"></Button>
+                </StackPanel>
+                <TextBlock x:Name="IPATXT" HorizontalAlignment="Right" Foreground="White" FontWeight="Bold" FontStyle="Italic">0.0.0.000</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <Label HorizontalAlignment="Left">PORT:</Label>
+                    <Button x:Name="PORTCopyBTN" Content="Copy!" HorizontalAlignment="Right" Click="PORTCopyBTN_Click"></Button>
+                </StackPanel>
+                <TextBlock x:Name="PORTTxt" HorizontalAlignment="Right" Foreground="White" FontWeight="Bold" FontStyle="Italic">0000</TextBlock>
+                <StackPanel Orientation="Horizontal" Height="62">
+                    <Button x:Name="QrBTN" Height="30" HorizontalAlignment="Left" Content="QR" Click="QrBTN_Click"></Button>
+                    <Image x:Name="QrImage" Height="56" Width="100" HorizontalAlignment="Right">
+                        <UIElement.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </UIElement.RenderTransform>
+                    </Image>
+                </StackPanel>
+            </StackPanel>
+            <ListBox x:Name="DataList" Width="305">
+
+            </ListBox>
+        </StackPanel>
+        <Image x:Name="ImageTest" Height="246" VerticalAlignment="Bottom"/>
+    </Grid>
+</hc:Window>
