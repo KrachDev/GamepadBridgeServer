@@ -1,17 +1,12 @@
 ﻿using HandyControl.Controls;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
-using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
 using MessageBox = HandyControl.Controls.MessageBox;
-using Window = HandyControl.Controls.Window;
 
 namespace GameBridgeServer
 {
@@ -22,8 +17,8 @@ namespace GameBridgeServer
         public static string StatusLog = string.Empty;
         private static Socket serverSocket;
         public const int SERVER_PORT = 5000;
-        public const int BUFFER_SIZE = 8024;
-        public const double TIMEOUT = 0.1; // in seconds
+        public const int BUFFER_SIZE = 512;
+        public const double TIMEOUT = 1; // in seconds
         public static bool LXinverteadY = false;
         public static bool LXinverteadX = false;
         public static bool RLXinverteadY = false;
@@ -161,69 +156,26 @@ namespace GameBridgeServer
             throw new NotImplementedException();
         }
 
-        public static async Task<string> ChooseIPAddressAsync()
-        {
-            // Get available IP addresses
-            List<IPAddress> ipAddresses = new List<IPAddress>(Dns.GetHostAddresses(Dns.GetHostName()));
-            string selectedIPAddress = string.Empty;
-
-            // Create ListBox to display IP addresses
-            ListBox listBox = new ListBox();
-            foreach (var ipAddress in ipAddresses)
-            {
-                listBox.Items.Add(ipAddress.ToString());
-            }
-
-            // Create Window to display the ListBox
-            Window ipWindow = new Window
-            {
-                Title = "Choose IP Address",
-                Width = 200,
-                Height = 200,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                Content = listBox
-            };
-
-            // Handle selection event
-            listBox.SelectionChanged += (sender, e) =>
-            {
-                if (listBox.SelectedItem != null)
-                {
-                    // Retrieve the selected IP address
-                    selectedIPAddress = listBox.SelectedItem.ToString();
-                    MessageBox.Show($"Selected IP address: {selectedIPAddress}");
-
-                    // Close the window
-                    ipWindow.Close();
-                }
-            };
-
-            // Show the window
-            ipWindow.ShowDialog();
-
-            return selectedIPAddress;
-        }
         // Method to start the UDP server asynchronously
-        public static async Task StartServerAsync(TextBlock ipblock, TextBlock portblock, Label statusLabel)
+        public static async Task StartServerAsync(TextBlock ipblock, TextBlock portblock, Label statusLabel, string selectedIPAddress)
         {
             try
             {
                 // Create a new socket for UDP communication
                 serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
                 // Bind the socket to the server port
-                var selectedIPAddress = await ChooseIPAddressAsync();
 
                 var ipAddress = IPAddress.Parse(selectedIPAddress);
                 var endPoint = new IPEndPoint(ipAddress, SERVER_PORT);
 
                 serverSocket.Bind(endPoint);
-                serverSocket.ReceiveTimeout = (int)(TIMEOUT * 1000);
+                serverSocket.ReceiveTimeout = (int)(TIMEOUT);
 
                 MessageBox.Show($"UDP server is running on port {SERVER_PORT}");
 
                 ipAdrease = selectedIPAddress;
                 portAdrease = SERVER_PORT.ToString();
-                StatusLog = "Connected";
+                StatusLog = "STATUS: Connected";
                 // Update UI asynchronously
                 await Application.Current.Dispatcher.InvokeAsync(() => UpdateUI(ipblock, portblock, statusLabel));
 
@@ -241,6 +193,8 @@ namespace GameBridgeServer
             ipblock.Text = ServerClass.ipAdrease;
             portblock.Text = ServerClass.portAdrease;
             statusLabel.Content = ServerClass.StatusLog;
+            statusLabel.Foreground = new SolidColorBrush(Colors.Green);
+
         }
 
         private static async Task HandleClientRequestsAsync()
@@ -255,44 +209,49 @@ namespace GameBridgeServer
                     SocketReceiveFromResult result = await serverSocket.ReceiveFromAsync(new ArraySegment<byte>(buffer), SocketFlags.None, clientEndPoint);
 
                     int bytesRead = result.ReceivedBytes;
-                    byte[] receivedData = new byte[bytesRead];
-                    Array.Copy(buffer, receivedData, bytesRead);
 
-                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    // Process the received data only if bytes were received
+                    if (bytesRead > 0)
                     {
-                        // Check if the received data corresponds to any action in the dictionary
-                        foreach (var item in actionDictionary)
-                        {
-                            if (ByteArrayCompare(receivedData, item.Key) || CheckFirstBytes(receivedData, item.Key))
-                            {
-                                item.Value.Invoke(receivedData, clientEndPoint);
-                                break;
-                            }
-                        }
-                    });
+                        // Create a new array with the exact size of the received data
+                        byte[] receivedData = new byte[bytesRead];
+                        Array.Copy(buffer, receivedData, bytesRead);
+
+                        // Process the received data asynchronously
+                        await ProcessClientDataAsync(receivedData, clientEndPoint);
+                    }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                // Server is being shut down
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Client request: An error occurred: {ex.Message}");
+                // Log the exception
+                Growl.ErrorGlobal($"Client request: An error occurred: {ex.Message}");
             }
         }
 
+        private static async Task ProcessClientDataAsync(byte[] receivedData, EndPoint clientEndPoint)
+        {
+            // Process the received data and handle client requests
+            foreach (var item in actionDictionary)
+            {
+                if (ByteArrayCompare(receivedData, item.Key) || CheckFirstBytes(receivedData, item.Key))
+                {
+                     item.Value.Invoke(receivedData, clientEndPoint);
+                    return; // Exit the loop once the request is handled
+                }
+            }
+        }
 
         // Method to compare byte arrays
         private static bool ByteArrayCompare(byte[] a1, byte[] a2)
         {
-            if (a1.Length != a2.Length)
-                return false;
-
-            for (int i = 0; i < a1.Length; i++)
-            {
-                if (a1[i] != a2[i])
-                    return false;
-            }
-
-            return true;
+            return a1.SequenceEqual(a2);
         }
+
         private static bool CheckFirstBytes(byte[] data, byte[] key)
         {
             if (data.Length < key.Length)
@@ -310,6 +269,7 @@ namespace GameBridgeServer
 
             return true;
         }
+
 
     }
 }

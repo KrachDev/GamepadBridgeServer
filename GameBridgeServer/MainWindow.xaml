@@ -7,10 +7,10 @@
 
         xmlns:local="clr-namespace:GameBridgeServer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Background="#FF272727">
+        Title="MainWindow" Height="244" Width="461" Background="#FF272727">
 
     <Grid>
-        
+
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FF1D1818" Offset="0.004"/>
@@ -20,45 +20,20 @@
         <hc:TabControl>
             <hc:TabItem Header="Main Page">
                 <Grid>
-                    <StackPanel x:Name="mainStack" Height="168" VerticalAlignment="Top" Orientation="Horizontal" Background="#FF1F1F1F">
-                        <StackPanel Height="151" Width="164">
-                            <Button x:Name="StartServerBTN" Content="Start Server" Width="164" Click="StartServerBTN_Click"/>
-                            <Button x:Name="StopServerBTN" Content="Stop Server" Width="164" Click="StopServerBTN_Click"/>
-                            <Button x:Name="TestBTN" Content="TEST" Width="164" Click="TestBTN_Click"/>
-                            <Button x:Name="ClickAbtn" Content="Click A" Width="164" Click="ClickAbtn_Click" MouseDown="ClickAbtn_MouseDown" MouseLeave="ClickAbtn_MouseLeave" />
+                    <Button x:Name="StartServerBTN" Content="Start Server" Width="164" Click="StartServerBTN_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,9,0,0"/>
+                    <Button x:Name="StopServerBTN" Content="Stop Server" Width="164" Click="StopServerBTN_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,40,0,0"/>
 
-                            <Label x:Name="StatusTXT" Background="#FF524F4F" Foreground="WhiteSmoke" FontStyle="Italic" FontWeight="Bold">Status</Label>
-                        </StackPanel>
-                        <StackPanel Height="150" Width="329">
-                            <StackPanel Orientation="Horizontal">
-                                <Label HorizontalAlignment="Left">IP-ADREASE:</Label>
-                                <Button x:Name="IPACopyBTN" Content="Copy!" HorizontalAlignment="Right" Click="IPACopyBTN_Click"></Button>
-                            </StackPanel>
-                            <TextBlock x:Name="IPATXT" HorizontalAlignment="Right" Foreground="White" FontWeight="Bold" FontStyle="Italic">0.0.0.000</TextBlock>
-                            <StackPanel Orientation="Horizontal">
-                                <Label HorizontalAlignment="Left">PORT:</Label>
-                                <Button x:Name="PORTCopyBTN" Content="Copy!" HorizontalAlignment="Right" Click="PORTCopyBTN_Click"></Button>
-                            </StackPanel>
-                            <TextBlock x:Name="PORTTxt" HorizontalAlignment="Right" Foreground="White" FontWeight="Bold" FontStyle="Italic">0000</TextBlock>
-                            <StackPanel Orientation="Horizontal" Height="62">
-                                <Button x:Name="QrBTN" Height="30" HorizontalAlignment="Left" Content="QR" Click="QrBTN_Click"></Button>
-                                <Image x:Name="QrImage" Height="56" Width="100" HorizontalAlignment="Right">
-                                    <UIElement.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </UIElement.RenderTransform>
-                                </Image>
-                            </StackPanel>
-                        </StackPanel>
-                        <ListBox x:Name="DataList" Width="305">
+                    <Label x:Name="StatusTXT" Background="#FF524F4F" Foreground="WhiteSmoke" FontStyle="Italic" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="54,0,0,0">Status</Label>
 
-                        </ListBox>
-                    </StackPanel>
-
+                    <TextBlock x:Name="IPATXT" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontStyle="Italic" TextAlignment="Center" Height="15" VerticalAlignment="Center">0.0.0.000</TextBlock>
+                    <TextBlock x:Name="PORTTxt" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontStyle="Italic" TextAlignment="Center" VerticalAlignment="Center" Margin="129,0,0,0">0000</TextBlock>
+                    <Image x:Name="QrImg" Margin="0,1,65,1" Stretch="Fill" HorizontalAlignment="Right" Width="196"/>
+                    <Border Name="Sidepanel" HorizontalAlignment="Right" Margin="367,0,0,0" RenderTransformOrigin="0.5,0.5" Width="60" Background="#FF484848" CornerRadius="5,0,0,5">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="27"/>
+                        </Border.Effect>
+                        <Button x:Name="SettingsBTN" VerticalAlignment="Top" Height="29" Width="35" Content="S"></Button>
+                    </Border>
                 </Grid>
             </hc:TabItem>
         </hc:TabControl>

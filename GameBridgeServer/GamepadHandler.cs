@@ -1,4 +1,5 @@
-﻿using Nefarius.ViGEm.Client;
+﻿using HandyControl.Controls;
+using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
 using System;
@@ -15,14 +16,22 @@ namespace GameBridgeServer
         public static IXbox360Controller _xbox360Controller = null;
         public static void CreatX360Instence()
         {
-            var client = new ViGEmClient();
+            try
+            {
 
-            // prepares a new x360
-            _xbox360Controller = client.CreateXbox360Controller();
+                var client = new ViGEmClient();
 
-            // brings the x360 online
-            _xbox360Controller.Connect();
+                // prepares a new x360
+                _xbox360Controller = client.CreateXbox360Controller();
 
+                // brings the x360 online
+                _xbox360Controller.Connect();
+
+            }
+            catch (Exception ex)
+            {
+                Growl.ErrorGlobal("Error in GamepadInctencer: " + ex.Message);
+            }
         }
     }
 }
