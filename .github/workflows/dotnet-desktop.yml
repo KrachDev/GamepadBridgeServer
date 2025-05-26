@@ -84,6 +84,10 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Build Output
-        path: '**/bin/${{ matrix.configuration }}/net8.0-windows/**/*'
+         name: Build Output
+         path: GameBridgeServer/bin/${{ matrix.configuration }}/net8.0-windows/
+         if-no-files-found: warn
+         compression-level: 6
+         overwrite: false
+         include-hidden-files: false
 
