@@ -1,0 +1,25 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings"
+              CurrentProfile="(Default)">
+    <Profiles />
+    <Settings>
+        <Setting Name="ServerPortSetting" Type="System.Int32" Scope="User">
+            <Value Profile="(Default)">5000</Value>
+        </Setting>
+        <Setting Name="IsServerRunning" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">false</Value>
+        </Setting>
+        <Setting Name="LeftStickInvertX" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">false</Value>
+        </Setting>
+        <Setting Name="LeftStickInvertY" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">false</Value>
+        </Setting>
+        <Setting Name="RightStickInvertX" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">false</Value>
+        </Setting>
+        <Setting Name="RightStickInvertY" Type="System.Boolean" Scope="User">
+            <Value Profile="(Default)">false</Value>
+        </Setting>
+    </Settings>
+</SettingsFile>
